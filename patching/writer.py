@@ -42,8 +42,8 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
 
     overrides = {}
 
-    if os.path.isfile(overridesF := ("versions/" + versionName + "/.overrides")):
-        with open(overridesF, "r", encoding='utf-8') as f:
+    if os.path.isfile(ovrallF := "all.funcutter"):
+        with open(ovrallF, "r", encoding='utf-8') as f:
             data = f.read().splitlines()
 
         for line in data:
@@ -51,8 +51,8 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
                 pkg, _, modu = line.partition(" == ")
                 overrides["/" + pkg] = modu
 
-    if os.path.isfile(ovrallF := "all.funcutter"):
-        with open(ovrallF, "r", encoding='utf-8') as f:
+    if os.path.isfile(overridesF := ("versions/" + versionName + "/.overrides")):
+        with open(overridesF, "r", encoding='utf-8') as f:
             data = f.read().splitlines()
 
         for line in data:
