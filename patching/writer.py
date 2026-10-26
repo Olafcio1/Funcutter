@@ -51,6 +51,15 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
                 pkg, _, modu = line.partition(" == ")
                 overrides["/" + pkg] = modu
 
+    if os.path.isfile(ovrallF := "all.funcutter"):
+        with open(ovrallF, "r", encoding='utf-8') as f:
+            data = f.read().splitlines()
+
+        for line in data:
+            if line and not line.startswith(";"):
+                pkg, _, modu = line.partition(" == ")
+                overrides["/" + pkg] = modu
+
     for fn in files:
         fnSlashed = "/" + fn
 
