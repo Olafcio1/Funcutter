@@ -213,15 +213,33 @@ def buildAll() -> None:
               command.append(args.pop(0))
             else: command.append('build')
 
-            command.extend(args)
+            skipNow = False
+
+            for arg in args:
+              if skipNow:
+                skipNow = False
+              elif arg in ('-v', '--version'):
+                skipNow = True
+              else:
+                command.append(arg)
         else:
           command.append("build")
 
         runner = lambda: subprocess.run(command)
 
+      expectingSpecific = None if len(sys.argv) < 3 else (
+          sys.argv[sys.argv.index('-v')        + 1] if '-v'        in sys.argv else
+          sys.argv[sys.argv.index('--version') + 1] if '--version' in sys.argv else
+          None
+      )
+
       for version in funcutter:
           if version['abstract']:
               continue
+
+          if expectingSpecific:
+              if expectingSpecific != version['name']:
+                  continue
 
           print("[Funcutter] > Version " + version['name'])
 
@@ -247,6 +265,12 @@ def buildAll() -> None:
 
           subprocess.run(["git", "reset", "--hard"])
           pendingReset = False
+
+          if expectingSpecific:
+              break
+      else:
+        if expectingSpecific:
+          print("[Funcutter] [ERROR] Unable to find version '%s'" % sys.argv[2])
     except KeyboardInterrupt:
         print("[Funcutter] > Detected keyboard interrupt, cancelling")
         signal.signal(signal.SIGINT, lambda *_: None)
