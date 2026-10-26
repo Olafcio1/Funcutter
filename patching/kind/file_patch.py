@@ -1,3 +1,4 @@
+import colored
 from ..types import *
 
 __all__ = ("parsePatch", "writePatch",)
@@ -43,7 +44,7 @@ def parsePatch(patch: str, ext: str) -> Patch:
                 raise Exception("Import statements are not allowed in sections")
 
             if line.endswith(";"):
-                print("[FunCutter] [Patches/WARN] Imports don't have to end with a ';'")
+                print(colored.fore_rgb(80, 80, 80) + "[Funcutter] [Patches" + colored.fore_rgb(90, 85, 80) + "/WARN" + colored.fore_rgb(80, 80, 80) + "] Imports don't have to end with a ';'" + colored.Style.RESET)
 
             sections.append(Section(
                 search  = "import ",

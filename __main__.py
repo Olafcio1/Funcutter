@@ -5,6 +5,32 @@ import msvcrt
 import sys
 import os
 
+try:
+    import colorama
+    import colored
+except:
+    print("[!] Install 'colorama' and 'colored'? They're optional dependencies for Funcutter.", flush=True)
+
+    while True:
+        print("[!] (y/n) ", flush=True)
+
+        resp = msvcrt.getwch()
+
+        if resp == 'y':
+            subprocess.run([sys.executable, "-m", "pip", "--no-version-check", "install", "colorama", "colored"])
+        elif resp == 'n':
+            break
+        else:
+            import patchin
+
+            patchin.colored()
+
+            continue
+
+    print()
+else:
+    colorama.just_fix_windows_console()
+
 from input import *
 
 from modloaders.fabric import Fabric

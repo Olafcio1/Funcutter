@@ -1,4 +1,5 @@
 import os
+import colored
 import subprocess
 
 from .kind.file_patch import writePatch
@@ -108,27 +109,27 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
         if os.path.isdir(pathN):
             writePatches(versionName, recovery, sub=subN, recoveryLate=recoveryLate)
         elif (dotSplit := fn.rpartition("."))[2].startswith("fp-"):
-            print("[Funcutter] [Patches] > Applying " + pathN)
+            print(colored.fore_rgb(80, 80, 80) + "[Funcutter] [Patches] " + colored.fore_rgb(120, 80, 120) + "> Applying " + colored.Style.BOLD + pathN + colored.Style.RESET)
 
             physN = physP + sub + "/" + dotSplit[0] + "." + dotSplit[2][3:]
 
             if not os.path.isfile(physN):
-                input("\a[Funcutter] [Patches] [ERROR] > Failed to apply: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist"))
+                input(colored.fore_rgb(140, 80, 80) + "\a[Funcutter] [Patches] [ERROR] > Failed to apply: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist") + colored.Style.RESET)
                 continue
 
             writePatch(pathN, physN)
         elif (dotSplit := fn.rpartition("."))[2].startswith("fs-"):
-            print("[Funcutter] [Patches] > Running " + pathN)
+            print(colored.fore_rgb(80, 80, 80) + "[Funcutter] [Patches] " + colored.fore_rgb(80, 120, 120) + "> Running " + colored.Style.BOLD + pathN + colored.Style.RESET)
 
             physN = physP + sub + "/" + dotSplit[0] + "." + dotSplit[2][3:]
 
             if not os.path.isfile(physN):
-                input("\a[Funcutter] [Patches] [ERROR] > Failed to run: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist"))
+                input(colored.fore_rgb(140, 80, 80) + "\a[Funcutter] [Patches] [ERROR] > Failed to run: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist") + colored.Style.RESET)
                 continue
 
             scriptPatch(pathN, physN)
         elif (dotSplit := fn.rpartition("."))[2].startswith("fd-"):
-            print("[Funcutter] [Patches] > Deleting " + pathN)
+            print(colored.fore_rgb(80, 80, 80) + "[Funcutter] [Patches] " + colored.fore_rgb(120, 80, 80) + "> Deleting " + colored.Style.BOLD + pathN + colored.Style.RESET)
 
             realP = physP + sub + "/" + dotSplit[0] + "." + dotSplit[2][3:]
             optional = False
@@ -138,7 +139,7 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
                     optional = True
 
             if not os.path.isfile(realP):
-                input("\a[Funcutter] [Patches] [ERROR] > Failed to delete: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist"))
+                input(colored.fore_rgb(140, 80, 80) + "\a[Funcutter] [Patches] [ERROR] > Failed to delete: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist") + colored.Style.RESET)
                 continue
 
             try:
@@ -149,7 +150,7 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
 
             recovery.append(runner(["git", "restore", realP]))
         else:
-            print("[Funcutter] [Patches] > Creating " + pathN)
+            print(colored.fore_rgb(80, 80, 80) + "[Funcutter] [Patches] " + colored.fore_rgb(80, 120, 80) + "> Creating " + colored.Style.BOLD + pathN + colored.Style.RESET)
 
             with open(pathN, "rb") as src:
                 with open(physN, "wb") as dest:
