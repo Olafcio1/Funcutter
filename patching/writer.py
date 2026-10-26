@@ -109,10 +109,24 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
             writePatches(versionName, recovery, sub=subN, recoveryLate=recoveryLate)
         elif (dotSplit := fn.rpartition("."))[2].startswith("fp-"):
             print("[Funcutter] [Patches] > Applying " + pathN)
-            writePatch(pathN, physP + sub + "/" + dotSplit[0] + "." + dotSplit[2][3:])
+
+            physN = physP + sub + "/" + dotSplit[0] + "." + dotSplit[2][3:]
+
+            if not os.path.isfile(physN):
+                input("\a[Funcutter] [Patches] [ERROR] > Failed to apply: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist"))
+                continue
+
+            writePatch(pathN, physN)
         elif (dotSplit := fn.rpartition("."))[2].startswith("fs-"):
             print("[Funcutter] [Patches] > Running " + pathN)
-            scriptPatch(pathN, physP + sub + "/" + dotSplit[0] + "." + dotSplit[2][3:])
+
+            physN = physP + sub + "/" + dotSplit[0] + "." + dotSplit[2][3:]
+
+            if not os.path.isfile(physN):
+                input("\a[Funcutter] [Patches] [ERROR] > Failed to run: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist"))
+                continue
+
+            scriptPatch(pathN, physN)
         elif (dotSplit := fn.rpartition("."))[2].startswith("fd-"):
             print("[Funcutter] [Patches] > Deleting " + pathN)
 
@@ -122,6 +136,10 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
             with open(pathN, "r", encoding='utf-8', errors='ignore') as infofile:
                 if infofile.read().strip() == '[optional]':
                     optional = True
+
+            if not os.path.isfile(realP):
+                input("\a[Funcutter] [Patches] [ERROR] > Failed to delete: " + pathN + " [%s]  " % ("not a file" if os.path.exists(physN) else "doesn't exist"))
+                continue
 
             try:
                 os.unlink(realP)
