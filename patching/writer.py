@@ -57,9 +57,12 @@ def writePatches(versionName: str, recovery: list, *, sub: str = "", recoveryLat
         subN = sub + fnSlashed
         pathN = path + fnSlashed
 
-        if subN in overrides:
-            physP = "src/" + overrides[subN]
-            physN = physP + subN
+        for ovr in overrides:
+            if subN.startswith(ovr):
+                physP = "src/" + overrides[ovr]
+                physN = physP + subN
+
+                break
         else:
             order = []
             subNS = subN.split("/")
