@@ -13,8 +13,8 @@ def scriptPatch(patchPath: str, physicalPath: str) -> None:
 
     ext = physicalPath.rpartition(".")[2]
     if ext not in SCRIPTABLES:
-        ext = "txt"
         print("[FunCutter] [Patches/WARN] > Unrecognized extension '.%s', falling back to .txt" % ext)
+        ext = "txt"
 
     with open(patchPath, "r", encoding="utf-8") as f:
         userscript = f.read()
@@ -29,12 +29,13 @@ def scriptPatch(patchPath: str, physicalPath: str) -> None:
         f.seek(0)
 
         parsed = load(physical)
-
-        exec(compiled, {
+        options = {
             "this": parsed
-        }, {})
+        }
 
-        dumped = dump(parsed)
+        exec(compiled, options, options)
+
+        dumped = dump(options['this'])
         encoded = dumped.encode(encoding)
 
         f.write(encoded)
